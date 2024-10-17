@@ -1,0 +1,23 @@
+meta {
+  name: update-specific-product
+  type: http
+  seq: 9
+}
+
+put {
+  url: http://localhost:3001/products/67116a59418d7044edcac38e
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Updated Rolex Submariner",
+    "images": ["https://example.com/image1_updated.jpg"],
+    "price": 8500,
+    "discountPrice": 8000,
+    "colors": ["gold", "silver", "black"],
+    "sizes": ["medium"],
+    "featured": true
+  }
+}
