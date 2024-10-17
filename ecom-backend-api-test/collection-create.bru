@@ -1,0 +1,18 @@
+meta {
+  name: collection-create
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3001/collections/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "name": "Summer Collection",
+    "description": "A collection for summer clothing items."
+  }
+}
