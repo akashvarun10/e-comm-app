@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // Make sure this line is present
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema({
   },
   collectionId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Collection', // Reference to the Collection model
+    ref: 'Collection',
     required: true,
   },
   images: {
