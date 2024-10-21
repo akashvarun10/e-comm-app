@@ -1,5 +1,20 @@
-import { UserButton } from "@clerk/nextjs";
-import Link from "next/link";
+'use client'
+
+import { UserButton } from "@clerk/nextjs"
+import Link from "next/link"
+import { LayoutDashboard, LayoutGrid, Package, Menu } from "lucide-react"
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarProvider,
+  SidebarRail,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 
 export default function DashboardLayout({
   children,
@@ -7,37 +22,62 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
-          <h1 className="text-2xl font-semibold text-gray-900">E-commerce Admin</h1>
-          <UserButton afterSignOutUrl="/" />
+    <SidebarProvider>
+      <div className="flex h-screen w-full overflow-hidden bg-background">
+        <Sidebar className="border-r hidden lg:block">
+          <SidebarHeader className="flex h-14 items-center border-b px-4">
+            <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+              <Package className="h-6 w-6" />
+              <span className="">E-commerce Admin</span>
+            </Link>
+          </SidebarHeader>
+          <SidebarContent>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/dashboard">
+                    <LayoutDashboard className="mr-2 h-4 w-4" />
+                    Dashboard
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/dashboard/collections">
+                    <LayoutGrid className="mr-2 h-4 w-4" />
+                    Collections
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/dashboard/products">
+                    <Package className="mr-2 h-4 w-4" />
+                    Products
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarContent>
+          <SidebarRail />
+        </Sidebar>
+        <div className="flex flex-1 flex-col overflow-hidden">
+          <header className="sticky top-0 z-10 flex h-14 items-center justify-between border-b bg-background px-4 lg:px-6">
+            <div className="flex items-center">
+              <SidebarTrigger className="lg:hidden">
+                <Menu className="h-6 w-6" />
+              </SidebarTrigger>
+              <h1 className="ml-2 text-lg font-semibold lg:hidden">E-commerce Admin</h1>
+            </div>
+            <UserButton afterSignOutUrl="/" />
+          </header>
+          <main className="flex-1 overflow-y-auto p-4 lg:p-6">
+            <div className="mx-auto w-full max-w-7xl space-y-4">
+              {children}
+            </div>
+          </main>
         </div>
-      </header>
-      <div className="flex-grow flex">
-        <nav className="bg-gray-800 w-64 p-4">
-          <ul className="space-y-2">
-            <li>
-              <Link href="/dashboard" className="text-white hover:text-gray-300">
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link href="/dashboard/collections" className="text-white hover:text-gray-300">
-                Collections
-              </Link>
-            </li>
-            <li>
-              <Link href="/dashboard/products" className="text-white hover:text-gray-300">
-                Products
-              </Link>
-            </li>
-          </ul>
-        </nav>
-        <main className="flex-grow p-6 bg-gray-100">
-          {children}
-        </main>
       </div>
-    </div>
+    </SidebarProvider>
   )
 }

@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: 'E-commerce Admin Dashboard',
   description: 'Admin dashboard for managing products and collections',
+  viewport: 'width=device-width, initial-scale=1',  // Mobile responsiveness
 }
 
 export default function RootLayout({
@@ -17,7 +18,15 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
-        <body className={inter.className}>{children}</body>
+        <head>
+          <meta name="description" content={metadata.description} />
+          <meta name="viewport" content={metadata.viewport} />
+          <title>{metadata.title}</title>
+          <link rel="icon" href="/favicon.ico" />
+        </head>
+        <body className={inter.className}>
+          {children}
+        </body>
       </html>
     </ClerkProvider>
   )
