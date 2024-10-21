@@ -1,15 +1,5 @@
 const productService = require('../services/productService');
 
-// exports.createProduct = async (req, res) => {
-//     try {
-//       const product = await productService.createProduct(req.body);
-//       res.status(201).json({ message: 'Product created successfully', product });
-//     } catch (error) {
-//       res.status(400).json({ error: error.message });
-//     }
-//   };
-
-
 exports.createProduct = async (req, res) => {
     try {
       const product = await productService.createProduct(req.body); // Now contains images array
