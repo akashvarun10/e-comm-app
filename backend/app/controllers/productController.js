@@ -29,25 +29,33 @@ exports.getProductById = async (req, res) => {
 };
 
 exports.filterProducts = async (req, res) => {
-  const { brand, size, color, priceRange, featured } = req.query;
-
-  // Construct filter object
-  const filter = {};
-  if (brand) filter.brand = brand; // Assuming brand is a field in the product schema
-  if (size) filter.sizes = size; // Size filtering
-  if (color) filter.colors = color; // Color filtering
-  if (featured) filter.featured = featured === 'true'; // Featured filtering
-
-  // Price filtering
-  if (priceRange) {
-    const [minPrice, maxPrice] = priceRange.split('-').map(Number);
-    filter.price = { $gte: minPrice, $lte: maxPrice };
-  }
-
   try {
+    const { brand, size, color, priceRange, featured, tags } = req.query;
+    
+    // Build filter object
+    const filter = {};
+    
+    // Add filters only if they exist in query
+    if (brand) filter.brand = brand;
+    if (size) filter.sizes = size;
+    if (color) filter.colors = color;
+    if (tags) filter.tags = { $in: Array.isArray(tags) ? tags : [tags] };
+    if (featured !== undefined) filter.featured = featured === 'true';
+    
+    // Handle price range
+    if (priceRange) {
+      const [min, max] = priceRange.split('-').map(Number);
+      if (!isNaN(min) && !isNaN(max)) {
+        filter.price = { $gte: min, $lte: max };
+      }
+    }
+
+    console.log('Filter criteria:', filter); // For debugging
+    
     const products = await productService.filterProducts(filter);
     res.status(200).json(products);
   } catch (error) {
+    console.error('Filter error:', error); // For debugging
     res.status(400).json({ error: error.message });
   }
 };
@@ -65,6 +73,16 @@ exports.deleteProduct = async (req, res) => {
   try {
     const product = await productService.deleteProduct(req.params.id);
     res.status(200).json({ message: 'Product deleted successfully', product });
+  } catch (error) {
+    res.status(404).json({ error: error.message });
+  }
+};
+
+// Add new endpoint for related products
+exports.getRelatedProducts = async (req, res) => {
+  try {
+    const relatedProducts = await productService.getRelatedProducts(req.params.id);
+    res.status(200).json(relatedProducts);
   } catch (error) {
     res.status(404).json({ error: error.message });
   }

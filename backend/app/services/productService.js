@@ -2,23 +2,31 @@ const Product = require('../models/productModel');
 const Collection = require('../models/collectionModel');
 
 exports.createProduct = async (productData) => {
-    const { collectionName, images } = productData; // Ensure images are extracted from productData
-    
-    // Check if the collection exists by name
-    const collectionExists = await Collection.findOne({ name: collectionName });
-    if (!collectionExists) {
-      throw new Error('Collection not found');
-    }
-    
-    // Create a new product with the provided images
-    const product = new Product({
-      ...productData,
-      collectionId: collectionExists._id,
-      images, // Store the image URLs directly
-    });
-    await product.save();
-    return product;
-  };
+  const { collectionName, images, brand, tags, ...otherData } = productData;
+
+  // Check if the collection exists by name
+  const collectionExists = await Collection.findOne({ name: collectionName });
+  if (!collectionExists) {
+    throw new Error('Collection not found');
+  }
+
+  // Create a new product with all fields explicitly included
+  const product = new Product({
+    name: otherData.name,
+    brand, // Explicitly include brand
+    tags,  // Explicitly include tags
+    collectionId: collectionExists._id,
+    images,
+    price: otherData.price,
+    discountPrice: otherData.discountPrice,
+    colors: otherData.colors,
+    sizes: otherData.sizes,
+    featured: otherData.featured
+  });
+
+  await product.save();
+  return product;
+};
 
 exports.getAllProducts = async () => {
   return await Product.find().populate('collectionId', 'name'); // Populate collection name
@@ -32,8 +40,19 @@ exports.getProductById = async (id) => {
   return product;
 };
 
-exports.filterProducts = async (filter) => {
-  return await Product.find(filter).populate('collectionId', 'name');
+exports.filterProducts = async (filterCriteria) => {
+  try {
+    console.log('Service filter criteria:', filterCriteria); // For debugging
+    
+    const products = await Product.find(filterCriteria)
+      .populate('collectionId', 'name');
+    
+    console.log(`Found ${products.length} products`); // For debugging
+    return products;
+  } catch (error) {
+    console.error('Service filter error:', error); // For debugging
+    throw error;
+  }
 };
 
 exports.updateProduct = async (id, updates) => {
@@ -53,4 +72,22 @@ exports.deleteProduct = async (id) => {
     throw new Error('Product not found');
   }
   return product;
+};
+
+exports.getRelatedProducts = async (productId) => {
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw new Error('Product not found');
+  }
+
+  // Find products that share at least one tag with the current product
+  // Exclude the current product from results
+  const relatedProducts = await Product.find({
+    _id: { $ne: productId },
+    tags: { $in: product.tags }
+  })
+  .limit(4) // Limit to 4 related products
+  .populate('collectionId', 'name');
+
+  return relatedProducts;
 };

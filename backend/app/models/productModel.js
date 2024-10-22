@@ -1,4 +1,5 @@
-const mongoose = require('mongoose'); // Make sure this line is present
+// productModel.js
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -11,11 +12,22 @@ const productSchema = new mongoose.Schema({
     ref: 'Collection',
     required: true,
   },
+  brand: {
+    type: String,
+    required: true,
+  },
+  tags: {
+    type: [String], // Array of tags for related products
+    validate: {
+      validator: (v) => v && v.length > 0,
+      message: 'At least one tag is required.',
+    }
+  },
   images: {
-    type: [String], // Array of image URLs
+    type: [String],
     required: true,
     validate: {
-      validator: (v) => v.length >= 1 && v.length <= 4, // Minimum 1, maximum 4 images
+      validator: (v) => v.length >= 1 && v.length <= 4,
       message: 'A product must have between 1 and 4 images.',
     },
   },
@@ -28,15 +40,15 @@ const productSchema = new mongoose.Schema({
     default: null,
   },
   colors: {
-    type: [String], // Array of color strings
+    type: [String],
   },
   sizes: {
-    type: [String], // Array of size strings
+    type: [String],
   },
   featured: {
     type: Boolean,
     default: false,
   },
-}, { timestamps: true }); // Automatically manage createdAt and updatedAt timestamps
+}, { timestamps: true });
 
 module.exports = mongoose.model('Product', productSchema);

@@ -1,23 +1,23 @@
+// productRoutes.js
 const express = require('express');
 const router = express.Router();
-const { createProduct, getAllProducts, getProductById, filterProducts, updateProduct, deleteProduct } = require('../controllers/productController');
+const { 
+  createProduct, 
+  getAllProducts, 
+  getProductById, 
+  filterProducts, 
+  updateProduct, 
+  deleteProduct,
+  getRelatedProducts 
+} = require('../controllers/productController');
 
-// Create products
+// The order matters! More specific routes first
+router.get('/filter/products', filterProducts); // Changed the route path
 router.post('/create', createProduct);
-
-// Get all products
 router.get('/', getAllProducts);
-
-// Get a single product by ID
+router.get('/:id/related', getRelatedProducts);
 router.get('/:id', getProductById);
-
-// Filter products
-router.get('/filter', filterProducts);
-
-// Update products
-router.put('/:id', updateProduct); // Updated route for editing products
-
-// Delete products
+router.put('/:id', updateProduct);
 router.delete('/:id', deleteProduct);
 
 module.exports = router;
