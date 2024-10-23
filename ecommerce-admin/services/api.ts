@@ -4,7 +4,12 @@ async function fetchWithAuth(url: string, options: RequestInit = {}) {
   // Add authentication logic here (e.g., add a token to headers)
   const response = await fetch(`${API_BASE_URL}${url}`, options);
   if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`);
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(JSON.stringify({
+      status: response.status,
+      statusText: response.statusText,
+      message: errorData.message || 'An error occurred',
+    }));
   }
   return response.json();
 }
@@ -24,7 +29,9 @@ export const api = {
   getProducts: () => fetchWithAuth('/products'),
   createProduct: (data: {
     name: string;
-    collectionName: string;
+    collectionId: string;
+    brand: string;
+    tags: string[];
     price: number;
     images: string[];
     discountPrice?: number;
@@ -39,6 +46,8 @@ export const api = {
     }),
   updateProduct: (id: string, data: {
     name?: string;
+    brand?: string;
+    tags?: string[];
     price?: number;
     images?: string[];
     discountPrice?: number;
@@ -59,6 +68,7 @@ export const api = {
     color?: string;
     priceRange?: string;
     featured?: boolean;
+    tags?: string[];
   }) =>
     fetchWithAuth(`/products/filter?${new URLSearchParams(params as Record<string, string>)}`),
 };
