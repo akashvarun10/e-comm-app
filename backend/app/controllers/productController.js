@@ -88,7 +88,7 @@
 //   }
 // };
 
-
+const Collection = require('../models/collectionModel'); // Ensure the correct path to the model
 const productService = require('../services/productService');
 const { supabase, supabaseUrl } = require('../config/supabase');
 const { v4: uuidv4 } = require('uuid');
@@ -300,5 +300,29 @@ exports.getRelatedProducts = async (req, res) => {
     res.status(200).json(relatedProducts);
   } catch (error) {
     res.status(404).json({ error: error.message });
+  }
+};
+
+exports.getProductsByCollectionName = async (req, res) => {
+  try {
+    const { collectionName } = req.params; // Get the collection name from the request parameters
+
+    // Find the collection by name
+    const collection = await Collection.findOne({ name: collectionName });
+
+    if (!collection) {
+      return res.status(404).json({ message: 'Collection not found' });
+    }
+
+    // Fetch all products that belong to the specified collection ID
+    const products = await productService.getProductsByCollection(collection._id);
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({ message: 'No products found for this collection' });
+    }
+
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 };

@@ -210,3 +210,9 @@ exports.getRelatedProducts = async (productId) => {
 
   return relatedProducts;
 };
+
+exports.getProductsByCollection = async (collectionId) => {
+  // Find all products that belong to the given collectionId
+  const products = await Product.find({ collectionId }).populate('collectionId', 'name');
+  return products;
+};

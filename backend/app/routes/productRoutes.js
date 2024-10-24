@@ -37,6 +37,7 @@ const {
   updateProduct,
   deleteProduct,
   getRelatedProducts,
+  getProductsByCollectionName
 } = require('../controllers/productController');
 
 // The order matters! More specific routes first
@@ -45,6 +46,7 @@ router.post('/create', upload.array('images', 4), createProduct);
 router.get('/', getAllProducts);
 router.get('/:id/related', getRelatedProducts);
 router.get('/:id', getProductById);
+router.get('/collections/name/:collectionName/products', getProductsByCollectionName);
 router.put('/:id', upload.array('images', 4), updateProduct);
 router.delete('/:id', deleteProduct);
 
