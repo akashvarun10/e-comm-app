@@ -88,6 +88,9 @@
 //   }
 // };
 
+
+
+
 const Collection = require('../models/collectionModel'); // Ensure the correct path to the model
 const productService = require('../services/productService');
 const { supabase, supabaseUrl } = require('../config/supabase');

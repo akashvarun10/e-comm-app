@@ -61,7 +61,11 @@ function NavbarContent() {
         </div>
         <div className="hidden md:flex space-x-4">
           {collections.map((collection) => (
-            <Link key={collection._id} href={`/collections/${collection._id}`} className="text-sm font-medium">
+            <Link 
+              key={collection._id} 
+              href={`/collections/${encodeURIComponent(collection.name)}`} 
+              className="text-sm font-medium hover:text-primary transition-colors"
+            >
               {collection.name}
             </Link>
           ))}
@@ -70,7 +74,7 @@ function NavbarContent() {
           <div className="hidden md:block">
             <Input type="search" placeholder="Search..." className="w-[200px]" />
           </div>
-          <Link href="/cart" className="flex items-center space-x-1">
+          <Link href="/cart" className="flex items-center space-x-1 hover:text-primary transition-colors">
             <ShoppingCart className="h-5 w-5" />
             <span className="text-sm font-medium">({cartItems.length})</span>
           </Link>
@@ -100,7 +104,9 @@ function NavbarContent() {
           <DropdownMenuContent className="w-full">
             {collections.map((collection) => (
               <DropdownMenuItem key={collection._id} asChild>
-                <Link href={`/collections/${collection._id}`}>{collection.name}</Link>
+                <Link href={`/collections/${encodeURIComponent(collection.name)}`}>
+                  {collection.name}
+                </Link>
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
