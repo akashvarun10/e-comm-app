@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -60,16 +61,6 @@ export default function CollectionsPage() {
   )
 }
 
-// function HeroSection() {
-//   return (
-//     <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-20 mb-12 rounded-lg text-center">
-//       <h1 className="text-4xl font-bold mb-4">Explore Our Collections</h1>
-//       <p className="text-xl mb-8">Discover unique pieces that define your style</p>
-//       <Button size="lg" variant="secondary">Shop Now</Button>
-//     </div>
-//   )
-// }
-
 function HeroSection() {
   return (
     <div className="bg-gradient-to-r from-blue-500 to-pink-500 text-white py-20 mb-12 rounded-lg text-center">
@@ -88,11 +79,14 @@ function CollectionCard({ collection }: { collection: Collection }) {
         <CardDescription>{collection.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <img 
-          src={collection.image || '/placeholder.svg'} 
-          alt={collection.name} 
-          className="w-full h-48 object-cover rounded-md transition-transform duration-300 hover:scale-105"
-        />
+        <div className="relative w-full h-48">
+          <Image 
+            src={collection.image || '/placeholder.svg'}
+            alt={collection.name}
+            fill
+            className="object-cover rounded-md transition-transform duration-300 hover:scale-105"
+          />
+        </div>
       </CardContent>
       <CardFooter>
         <Link href={`/collections/${collection.name}`} className="w-full">

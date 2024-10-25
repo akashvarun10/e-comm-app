@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { PackageOpen } from 'lucide-react'
+import ProtectedPrice from '@/components/ProctectedPrice'
 
 interface Product {
   _id: string
@@ -17,17 +19,21 @@ interface Product {
 function ProductCard({ product }: { product: Product }) {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <CardContent className="p-0">
-        <img
+      <CardContent className="p-0 relative h-48">
+        <Image
           src={product.images[0] || '/placeholder.svg'}
           alt={product.name}
-          className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className="object-cover transition-transform duration-300 hover:scale-105"
         />
       </CardContent>
       <CardFooter className="p-4">
         <div>
           <h2 className="text-lg font-semibold">{product.name}</h2>
-          <p className="text-sm text-muted-foreground">${product.price.toFixed(2)}</p>
+          <p className="text-sm text-muted-foreground">
+            <ProtectedPrice price={product.price} />
+          </p>
         </div>
       </CardFooter>
     </Card>
@@ -112,3 +118,4 @@ export default function CollectionDetailPage() {
     </main>
   )
 }
+
