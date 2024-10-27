@@ -1,4 +1,3 @@
-//app/collections/[name]/page.tsx
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -8,12 +7,33 @@ import { useParams } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { PackageOpen } from 'lucide-react'
+import { PackageOpen, Search, Sliders } from 'lucide-react'
 import ProtectedPrice from '@/components/ProctectedPrice'
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 
 interface Product {
   _id: string
@@ -45,7 +65,7 @@ interface AvailableFilters {
 function ProductCard({ product }: { product: Product }) {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <CardContent className="p-0 relative h-48">
+      <CardContent className="p-0 relative aspect-square">
         <Image
           src={product.images[0] || '/placeholder.svg'}
           alt={product.name}
@@ -55,9 +75,9 @@ function ProductCard({ product }: { product: Product }) {
         />
       </CardContent>
       <CardFooter className="p-4">
-        <div>
-          <h2 className="text-lg font-semibold">{product.name}</h2>
-          <p className="text-sm text-muted-foreground">
+        <div className="w-full">
+          <h2 className="text-lg font-semibold truncate">{product.name}</h2>
+          <p className="text-sm text-muted-foreground mt-1">
             <ProtectedPrice price={product.price} />
           </p>
         </div>
@@ -71,16 +91,16 @@ function ProductGrid({ products }: { products: Product[] }) {
     return (
       <div className="text-center py-12">
         <PackageOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-        <h2 className="text-2xl font-semibold mb-2">No Products Here</h2>
+        <h2 className="text-2xl font-semibold mb-2">No Products Found</h2>
         <p className="text-muted-foreground">
-          There are currently no products available in this collection.
+          Try adjusting your filters or search terms.
         </p>
       </div>
     )
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
       {products.map((product) => (
         <Link key={product._id} href={`/products/${product._id}`}>
           <ProductCard product={product} />
@@ -92,9 +112,9 @@ function ProductGrid({ products }: { products: Product[] }) {
 
 function LoadingGrid() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
       {[...Array(8)].map((_, i) => (
-        <Skeleton key={i} className="w-full h-64" />
+        <Skeleton key={i} className="w-full aspect-square" />
       ))}
     </div>
   )
@@ -125,88 +145,109 @@ function FilterSidebar({ filters, setFilters, availableFilters, isSignedIn }: {
         priceRange: index === 0
           ? [numValue, Math.max(numValue, prev.priceRange[1])]
           : [prev.priceRange[0], numValue]
-    }))
+      }))
     }
   }
 
   return (
-    <aside className="w-full md:w-1/4 space-y-6">
-      <div>
-        <h2 className="text-lg font-semibold mb-2">Brand</h2>
-        {availableFilters.brands.map(brand => (
-          <div key={brand} className="flex items-center space-x-2">
-            <Checkbox
-              id={`brand-${brand}`}
-              checked={filters.brand.includes(brand)}
-              onCheckedChange={() => handleFilterChange('brand', brand)}
-            />
-            <Label htmlFor={`brand-${brand}`}>{brand}</Label>
-          </div>
-        ))}
-      </div>
-      <div>
-        <h2 className="text-lg font-semibold mb-2">Size</h2>
-        {availableFilters.sizes.map(size => (
-          <div key={size} className="flex items-center space-x-2">
-            <Checkbox
-              id={`size-${size}`}
-              checked={filters.size.includes(size)}
-              onCheckedChange={() => handleFilterChange('size', size)}
-            />
-            <Label htmlFor={`size-${size}`}>{size}</Label>
-          </div>
-        ))}
-      </div>
-      <div>
-        <h2 className="text-lg font-semibold mb-2">Color</h2>
-        {availableFilters.colors.map(color => (
-          <div key={color} className="flex items-center space-x-2">
-            <Checkbox
-              id={`color-${color}`}
-              checked={filters.color.includes(color)}
-              onCheckedChange={() => handleFilterChange('color', color)}
-            />
-            <Label htmlFor={`color-${color}`}>{color}</Label>
-          </div>
-        ))}
-      </div>
-      {isSignedIn && (
-        <div>
-          <h2 className="text-lg font-semibold mb-2">Price Range</h2>
-          <div className="flex items-center space-x-2">
-            <Input
-              type="number"
-              placeholder="Min"
-              value={filters.priceRange[0] || ''}
-              onChange={(e) => handlePriceChange(0, e.target.value)}
-              className="w-24"
-              min="0"
-            />
-            <span>to</span>
-            <Input
-              type="number"
-              placeholder="Max"
-              value={filters.priceRange[1] === availableFilters.maxPrice ? '' : filters.priceRange[1]}
-              onChange={(e) => handlePriceChange(1, e.target.value)}
-              className="w-24"
-              min={filters.priceRange[0]}
-            />
-          </div>
-        </div>
-      )}
-      <div>
-        <h2 className="text-lg font-semibold mb-2">Tags</h2>
-        {availableFilters.tags.map(tag => (
-          <div key={tag} className="flex items-center space-x-2">
-            <Checkbox
-              id={`tag-${tag}`}
-              checked={filters.tags.includes(tag)}
-              onCheckedChange={() => handleFilterChange('tags', tag)}
-            />
-            <Label htmlFor={`tag-${tag}`}>{tag}</Label>
-          </div>
-        ))}
-      </div>
+    <div className="space-y-6">
+      <Accordion type="single" collapsible className="w-full">
+        <AccordionItem value="brand">
+          <AccordionTrigger>Brand</AccordionTrigger>
+          <AccordionContent>
+            <div className="grid grid-cols-2 gap-2">
+              {availableFilters.brands.map(brand => (
+                <div key={brand} className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`brand-${brand}`}
+                    checked={filters.brand.includes(brand)}
+                    onCheckedChange={() => handleFilterChange('brand', brand)}
+                  />
+                  <Label htmlFor={`brand-${brand}`} className="text-sm">{brand}</Label>
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="size">
+          <AccordionTrigger>Size</AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-wrap gap-2">
+              {availableFilters.sizes.map(size => (
+                <Button
+                  key={size}
+                  variant={filters.size.includes(size) ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleFilterChange('size', size)}
+                >
+                  {size}
+                </Button>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="color">
+          <AccordionTrigger>Color</AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-wrap gap-2">
+              {availableFilters.colors.map(color => (
+                <Button
+                  key={color}
+                  variant={filters.color.includes(color) ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleFilterChange('color', color)}
+                  className="capitalize"
+                >
+                  {color}
+                </Button>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        {isSignedIn && (
+          <AccordionItem value="price">
+            <AccordionTrigger>Price Range</AccordionTrigger>
+            <AccordionContent>
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="number"
+                  placeholder="Min"
+                  value={filters.priceRange[0] || ''}
+                  onChange={(e) => handlePriceChange(0, e.target.value)}
+                  className="w-24"
+                  min="0"
+                />
+                <span>to</span>
+                <Input
+                  type="number"
+                  placeholder="Max"
+                  value={filters.priceRange[1] === availableFilters.maxPrice ? '' : filters.priceRange[1]}
+                  onChange={(e) => handlePriceChange(1, e.target.value)}
+                  className="w-24"
+                  min={filters.priceRange[0]}
+                />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        )}
+        <AccordionItem value="tags">
+          <AccordionTrigger>Tags</AccordionTrigger>
+          <AccordionContent>
+            <div className="flex flex-wrap gap-2">
+              {availableFilters.tags.map(tag => (
+                <Button
+                  key={tag}
+                  variant={filters.tags.includes(tag) ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleFilterChange('tags', tag)}
+                >
+                  {tag}
+                </Button>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
       <Button
         onClick={() => setFilters({
           brand: [],
@@ -215,10 +256,12 @@ function FilterSidebar({ filters, setFilters, availableFilters, isSignedIn }: {
           priceRange: [0, availableFilters.maxPrice],
           tags: []
         })}
+        variant="outline"
+        className="w-full"
       >
         Clear Filters
       </Button>
-    </aside>
+    </div>
   )
 }
 
@@ -245,6 +288,7 @@ export default function CollectionDetailPage() {
     maxPrice: 1000
   })
   const { isSignedIn = false } = useUser()
+  const [sortOption, setSortOption] = useState('featured')
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -302,11 +346,28 @@ export default function CollectionDetailPage() {
         return matchesBrand && matchesSize && matchesColor && matchesPrice && matchesTags && matchesSearch
       })
 
+      // Apply sorting
+      switch (sortOption) {
+        case 'price-low-high':
+          filtered.sort((a, b) => a.price - b.price)
+          break
+        case 'price-high-low':
+          filtered.sort((a, b) => b.price - a.price)
+          break
+        case 'name-a-z':
+          filtered.sort((a, b) => a.name.localeCompare(b.name))
+          break
+        case 'name-z-a':
+          filtered.sort((a, b) => b.name.localeCompare(a.name))
+          break
+        // 'featured' is the default, no sorting needed
+      }
+
       setFilteredProducts(filtered)
     }
 
     applyFilters()
-  }, [filters, searchTerm, allProducts, isSignedIn])
+  }, [filters, searchTerm, allProducts, isSignedIn, sortOption])
 
   if (isLoading) {
     return (
@@ -320,22 +381,65 @@ export default function CollectionDetailPage() {
   return (
     <main className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold mb-6 capitalize">{name} Collection</h1>
-      <div className="flex flex-col md:flex-row gap-8">
-        <FilterSidebar 
-          filters={filters} 
-          setFilters={setFilters} 
-          availableFilters={availableFilters} 
-          isSignedIn={isSignedIn}
-        />
-        <div className="w-full md:w-3/4">
-          <div className="mb-4">
-            <Input
-              type="search"
-              placeholder="Search products..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full max-w-sm"
-            />
+      <div className="flex flex-col lg:flex-row gap-8">
+        <aside className="w-full lg:w-1/4 hidden lg:block">
+          <FilterSidebar 
+            filters={filters} 
+            setFilters={setFilters} 
+            availableFilters={availableFilters} 
+            isSignedIn={isSignedIn}
+          />
+        </aside>
+        <div className="w-full lg:w-3/4">
+          <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+            <div className="relative w-full sm:w-auto">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search products..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 w-full sm:w-[300px]"
+              />
+            </div>
+            <div className="flex items-center gap-4 w-full sm:w-auto">
+              <Select value={sortOption} onValueChange={setSortOption}>
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue placeholder="Sort by" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="featured">Featured</SelectItem>
+                  <SelectItem value="price-low-high">Price: Low to High</SelectItem>
+                  <SelectItem value="price-high-low">Price: High to Low</SelectItem>
+                  <SelectItem value="name-a-z">Name: A to Z</SelectItem>
+                  <SelectItem value="name-z-a">Name: Z to A</SelectItem>
+                </SelectContent>
+              </Select>
+              <Sheet>
+                <SheetTrigger asChild>
+                  <Button variant="outline" className="lg:hidden">
+                    <Sliders className="mr-2 h-4 w-4" />
+                    Filters
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left">
+                  <SheetHeader>
+                    <SheetTitle>Filters</SheetTitle>
+                    <SheetDescription>
+                      Refine your product search
+                    </SheetDescription>
+                  </SheetHeader>
+                  <div className="mt-4">
+                    <FilterSidebar 
+                      filters={filters} 
+                      setFilters={setFilters} 
+                      availableFilters={availableFilters} 
+                      isSignedIn={isSignedIn}
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
           <ProductGrid products={filteredProducts} />
         </div>

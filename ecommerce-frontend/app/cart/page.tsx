@@ -1,217 +1,225 @@
+// // // 'use client'
+
+// // // import { useCart } from '@/context/CartContext'
+// // // import { Button } from '@/components/ui/button'
+// // // import Link from 'next/link'
+// // // import { Trash2 } from 'lucide-react'
+
+// // // export default function CartPage() {
+// // //   const { cartItems, removeFromCart, clearCart } = useCart()
+
+// // //   const handleRemove = (productId: string) => {
+// // //     removeFromCart(productId)
+// // //   }
+
+// // //   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+
+// // //   if (cartItems.length === 0) {
+// // //     return (
+// // //       <div className="text-center">
+// // //         <h1 className="text-3xl font-bold mb-4">Your Cart</h1>
+// // //         <p className="mb-6">Your cart is empty.</p>
+// // //         <Link href="/collections">
+// // //           <Button>Continue Shopping</Button>
+// // //         </Link>
+// // //       </div>
+// // //     )
+// // //   }
+
+// // //   return (
+// // //     <div>
+// // //       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
+// // //       <div className="space-y-4">
+// // //         {cartItems.map((item) => (
+// // //           <div key={item.productId} className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow">
+// // //             <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
+// // //             <div className="flex-1">
+// // //               <h2 className="text-xl font-semibold">{item.name}</h2>
+// // //               <p className="text-gray-600">Quantity: {item.quantity}</p>
+// // //               <p className="text-gray-600">Price: ${item.price.toFixed(2)}</p>
+// // //             </div>
+// // //             <Button variant="destructive" size="icon" onClick={() => handleRemove(item.productId)}>
+// // //               <Trash2 className="h-4 w-4" />
+// // //             </Button>
+// // //           </div>
+// // //         ))}
+// // //       </div>
+// // //       <div className="mt-8 bg-gray-100 p-4 rounded-lg">
+// // //         <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
+// // //         <div className="mt-4 space-x-4">
+// // //           <Button onClick={clearCart} variant="outline">Clear Cart</Button>
+// // //           <Button>Proceed to Checkout</Button>
+// // //         </div>
+// // //       </div>
+// // //     </div>
+// // //   )
+// // // }
+
 // // 'use client'
 
 // // import { useCart } from '@/context/CartContext'
 // // import { Button } from '@/components/ui/button'
+// // import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+// // import { Separator } from '@/components/ui/separator'
+// // import { ScrollArea } from '@/components/ui/scroll-area'
+// // import { Input } from '@/components/ui/input'
 // // import Link from 'next/link'
-// // import { Trash2 } from 'lucide-react'
+// // import Image from 'next/image'
+// // import { Trash2, ShoppingBag, ArrowRight, Plus, Minus } from 'lucide-react'
 
 // // export default function CartPage() {
-// //   const { cartItems, removeFromCart, clearCart } = useCart()
+// //   const { cartItems, removeFromCart, clearCart, updateQuantity } = useCart()
 
 // //   const handleRemove = (productId: string) => {
 // //     removeFromCart(productId)
 // //   }
 
-// //   const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+// //   const handleUpdateQuantity = (productId: string, newQuantity: number) => {
+// //     if (newQuantity > 0) {
+// //       updateQuantity(productId, newQuantity)
+// //     }
+// //   }
+
+// //   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
+// //   const tax = subtotal * 0.1 // Assuming 10% tax
+// //   const total = subtotal + tax
 
 // //   if (cartItems.length === 0) {
 // //     return (
-// //       <div className="text-center">
-// //         <h1 className="text-3xl font-bold mb-4">Your Cart</h1>
-// //         <p className="mb-6">Your cart is empty.</p>
-// //         <Link href="/collections">
-// //           <Button>Continue Shopping</Button>
-// //         </Link>
-// //       </div>
+// //       <Card className="max-w-2xl mx-auto mt-12">
+// //         <CardHeader>
+// //           <CardTitle className="text-3xl font-bold text-center">Your Cart</CardTitle>
+// //         </CardHeader>
+// //         <CardContent className="text-center">
+// //           <ShoppingBag className="w-24 h-24 mx-auto text-gray-300 mb-4" />
+// //           <p className="text-xl mb-6">Your cart is empty.</p>
+// //           <Link href="/collections">
+// //             <Button className="w-full sm:w-auto">
+// //               Continue Shopping
+// //               <ArrowRight className="ml-2 h-4 w-4" />
+// //             </Button>
+// //           </Link>
+// //         </CardContent>
+// //       </Card>
 // //     )
 // //   }
 
 // //   return (
-// //     <div>
-// //       <h1 className="text-3xl font-bold mb-6">Your Cart</h1>
-// //       <div className="space-y-4">
-// //         {cartItems.map((item) => (
-// //           <div key={item.productId} className="flex items-center space-x-4 bg-white p-4 rounded-lg shadow">
-// //             <img src={item.image} alt={item.name} className="w-20 h-20 object-cover rounded" />
-// //             <div className="flex-1">
-// //               <h2 className="text-xl font-semibold">{item.name}</h2>
-// //               <p className="text-gray-600">Quantity: {item.quantity}</p>
-// //               <p className="text-gray-600">Price: ${item.price.toFixed(2)}</p>
-// //             </div>
-// //             <Button variant="destructive" size="icon" onClick={() => handleRemove(item.productId)}>
-// //               <Trash2 className="h-4 w-4" />
+// //     <div className="container mx-auto px-4 py-8">
+// //       <h1 className="text-3xl font-bold mb-6 text-center">Your Shopping Cart</h1>
+// //       <div className="grid md:grid-cols-3 gap-8">
+// //         <Card className="md:col-span-2">
+// //           <CardHeader>
+// //             <CardTitle>Cart Items ({cartItems.length})</CardTitle>
+// //           </CardHeader>
+// //           <CardContent>
+// //             <ScrollArea className="h-[calc(100vh-400px)]">
+// //               {cartItems.map((item) => (
+// //                 <div key={item.productId} className="flex items-center space-x-4 py-4">
+// //                   <div className="relative w-24 h-24 rounded-md overflow-hidden">
+// //                     <Image
+// //                       src={item.image}
+// //                       alt={item.name}
+// //                       layout="fill"
+// //                       objectFit="cover"
+// //                     />
+// //                   </div>
+// //                   <div className="flex-1">
+// //                     <h2 className="text-lg font-semibold">{item.name}</h2>
+// //                     <p className="text-sm text-gray-500">Price: ${item.price.toFixed(2)}</p>
+// //                     <div className="flex items-center mt-2">
+// //                       <Button
+// //                         variant="outline"
+// //                         size="icon"
+// //                         onClick={() => handleUpdateQuantity(item.productId, item.quantity - 1)}
+// //                       >
+// //                         <Minus className="h-4 w-4" />
+// //                       </Button>
+// //                       <Input
+// //                         type="number"
+// //                         value={item.quantity}
+// //                         onChange={(e) => handleUpdateQuantity(item.productId, parseInt(e.target.value))}
+// //                         className="w-16 mx-2 text-center"
+// //                       />
+// //                       <Button
+// //                         variant="outline"
+// //                         size="icon"
+// //                         onClick={() => handleUpdateQuantity(item.productId, item.quantity + 1)}
+// //                       >
+// //                         <Plus className="h-4 w-4" />
+// //                       </Button>
+// //                     </div>
+// //                   </div>
+// //                   <Button variant="destructive" size="icon" onClick={() => handleRemove(item.productId)}>
+// //                     <Trash2 className="h-4 w-4" />
+// //                   </Button>
+// //                 </div>
+// //               ))}
+// //             </ScrollArea>
+// //           </CardContent>
+// //           <CardFooter>
+// //             <Button onClick={clearCart} variant="outline" className="w-full">
+// //               Clear Cart
 // //             </Button>
-// //           </div>
-// //         ))}
-// //       </div>
-// //       <div className="mt-8 bg-gray-100 p-4 rounded-lg">
-// //         <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
-// //         <div className="mt-4 space-x-4">
-// //           <Button onClick={clearCart} variant="outline">Clear Cart</Button>
-// //           <Button>Proceed to Checkout</Button>
-// //         </div>
+// //           </CardFooter>
+// //         </Card>
+// //         <Card>
+// //           <CardHeader>
+// //             <CardTitle>Order Summary</CardTitle>
+// //           </CardHeader>
+// //           <CardContent>
+// //             <div className="space-y-2">
+// //               <div className="flex justify-between">
+// //                 <span>Subtotal</span>
+// //                 <span>${subtotal.toFixed(2)}</span>
+// //               </div>
+// //               <div className="flex justify-between">
+// //                 <span>Tax (10%)</span>
+// //                 <span>${tax.toFixed(2)}</span>
+// //               </div>
+// //               <Separator />
+// //               <div className="flex justify-between font-bold">
+// //                 <span>Total</span>
+// //                 <span>${total.toFixed(2)}</span>
+// //               </div>
+// //             </div>
+// //           </CardContent>
+// //           <CardFooter>
+// //             <Button className="w-full">
+// //               Proceed to Checkout
+// //               <ArrowRight className="ml-2 h-4 w-4" />
+// //             </Button>
+// //           </CardFooter>
+// //         </Card>
 // //       </div>
 // //     </div>
 // //   )
 // // }
 
-// 'use client'
-
-// import { useCart } from '@/context/CartContext'
-// import { Button } from '@/components/ui/button'
-// import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-// import { Separator } from '@/components/ui/separator'
-// import { ScrollArea } from '@/components/ui/scroll-area'
-// import { Input } from '@/components/ui/input'
-// import Link from 'next/link'
-// import Image from 'next/image'
-// import { Trash2, ShoppingBag, ArrowRight, Plus, Minus } from 'lucide-react'
-
-// export default function CartPage() {
-//   const { cartItems, removeFromCart, clearCart, updateQuantity } = useCart()
-
-//   const handleRemove = (productId: string) => {
-//     removeFromCart(productId)
-//   }
-
-//   const handleUpdateQuantity = (productId: string, newQuantity: number) => {
-//     if (newQuantity > 0) {
-//       updateQuantity(productId, newQuantity)
-//     }
-//   }
-
-//   const subtotal = cartItems.reduce((total, item) => total + item.price * item.quantity, 0)
-//   const tax = subtotal * 0.1 // Assuming 10% tax
-//   const total = subtotal + tax
-
-//   if (cartItems.length === 0) {
-//     return (
-//       <Card className="max-w-2xl mx-auto mt-12">
-//         <CardHeader>
-//           <CardTitle className="text-3xl font-bold text-center">Your Cart</CardTitle>
-//         </CardHeader>
-//         <CardContent className="text-center">
-//           <ShoppingBag className="w-24 h-24 mx-auto text-gray-300 mb-4" />
-//           <p className="text-xl mb-6">Your cart is empty.</p>
-//           <Link href="/collections">
-//             <Button className="w-full sm:w-auto">
-//               Continue Shopping
-//               <ArrowRight className="ml-2 h-4 w-4" />
-//             </Button>
-//           </Link>
-//         </CardContent>
-//       </Card>
-//     )
-//   }
-
-//   return (
-//     <div className="container mx-auto px-4 py-8">
-//       <h1 className="text-3xl font-bold mb-6 text-center">Your Shopping Cart</h1>
-//       <div className="grid md:grid-cols-3 gap-8">
-//         <Card className="md:col-span-2">
-//           <CardHeader>
-//             <CardTitle>Cart Items ({cartItems.length})</CardTitle>
-//           </CardHeader>
-//           <CardContent>
-//             <ScrollArea className="h-[calc(100vh-400px)]">
-//               {cartItems.map((item) => (
-//                 <div key={item.productId} className="flex items-center space-x-4 py-4">
-//                   <div className="relative w-24 h-24 rounded-md overflow-hidden">
-//                     <Image
-//                       src={item.image}
-//                       alt={item.name}
-//                       layout="fill"
-//                       objectFit="cover"
-//                     />
-//                   </div>
-//                   <div className="flex-1">
-//                     <h2 className="text-lg font-semibold">{item.name}</h2>
-//                     <p className="text-sm text-gray-500">Price: ${item.price.toFixed(2)}</p>
-//                     <div className="flex items-center mt-2">
-//                       <Button
-//                         variant="outline"
-//                         size="icon"
-//                         onClick={() => handleUpdateQuantity(item.productId, item.quantity - 1)}
-//                       >
-//                         <Minus className="h-4 w-4" />
-//                       </Button>
-//                       <Input
-//                         type="number"
-//                         value={item.quantity}
-//                         onChange={(e) => handleUpdateQuantity(item.productId, parseInt(e.target.value))}
-//                         className="w-16 mx-2 text-center"
-//                       />
-//                       <Button
-//                         variant="outline"
-//                         size="icon"
-//                         onClick={() => handleUpdateQuantity(item.productId, item.quantity + 1)}
-//                       >
-//                         <Plus className="h-4 w-4" />
-//                       </Button>
-//                     </div>
-//                   </div>
-//                   <Button variant="destructive" size="icon" onClick={() => handleRemove(item.productId)}>
-//                     <Trash2 className="h-4 w-4" />
-//                   </Button>
-//                 </div>
-//               ))}
-//             </ScrollArea>
-//           </CardContent>
-//           <CardFooter>
-//             <Button onClick={clearCart} variant="outline" className="w-full">
-//               Clear Cart
-//             </Button>
-//           </CardFooter>
-//         </Card>
-//         <Card>
-//           <CardHeader>
-//             <CardTitle>Order Summary</CardTitle>
-//           </CardHeader>
-//           <CardContent>
-//             <div className="space-y-2">
-//               <div className="flex justify-between">
-//                 <span>Subtotal</span>
-//                 <span>${subtotal.toFixed(2)}</span>
-//               </div>
-//               <div className="flex justify-between">
-//                 <span>Tax (10%)</span>
-//                 <span>${tax.toFixed(2)}</span>
-//               </div>
-//               <Separator />
-//               <div className="flex justify-between font-bold">
-//                 <span>Total</span>
-//                 <span>${total.toFixed(2)}</span>
-//               </div>
-//             </div>
-//           </CardContent>
-//           <CardFooter>
-//             <Button className="w-full">
-//               Proceed to Checkout
-//               <ArrowRight className="ml-2 h-4 w-4" />
-//             </Button>
-//           </CardFooter>
-//         </Card>
-//       </div>
-//     </div>
-//   )
-// }
 
 'use client'
 
 import { useCart } from '@/context/CartContext'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
-// import { Separator } from '@/components/ui/separator'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Trash2, ShoppingBag, ArrowRight, Plus, Minus, LogIn } from 'lucide-react'
 import { useUser } from '@clerk/nextjs'
+import { motion, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react'
 
 export default function CartPage() {
   const { cartItems, removeFromCart, clearCart, updateQuantity } = useCart()
-  const { isSignedIn} = useUser()
+  const { isSignedIn } = useUser()
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 1000)
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleRemove = (productId: string) => {
     removeFromCart(productId)
@@ -227,114 +235,177 @@ export default function CartPage() {
 
   if (!isSignedIn) {
     return (
-      <Card className="max-w-2xl mx-auto mt-12">
+      <Card className="max-w-md mx-auto mt-12">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">Your Cart</CardTitle>
         </CardHeader>
-        <CardContent className="text-center">
-          <LogIn className="w-24 h-24 mx-auto text-gray-300 mb-4" />
-          <p className="text-xl mb-6">Please log in to view your cart.</p>
-          <Link href="/sign-in">
-            <Button className="w-full sm:w-auto">
-              Log In
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+        <CardContent className="text-center p-8">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <LogIn className="w-24 h-24 mx-auto text-muted-foreground mb-6" />
+            <p className="text-xl mb-8">Please log in to view your cart.</p>
+            <Link href="/sign-in">
+              <Button className="w-full sm:w-auto">
+                Log In
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </motion.div>
         </CardContent>
       </Card>
     )
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        >
+          <ShoppingBag className="w-12 h-12 text-primary" />
+        </motion.div>
+      </div>
+    )
+  }
+
   if (cartItems.length === 0) {
     return (
-      <Card className="max-w-2xl mx-auto mt-12">
+      <Card className="max-w-md mx-auto mt-12">
         <CardHeader>
           <CardTitle className="text-3xl font-bold text-center">Your Cart</CardTitle>
         </CardHeader>
-        <CardContent className="text-center">
-          <ShoppingBag className="w-24 h-24 mx-auto text-gray-300 mb-4" />
-          <p className="text-xl mb-6">Your cart is empty.</p>
-          <Link href="/collections">
-            <Button className="w-full sm:w-auto">
-              Continue Shopping
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+        <CardContent className="text-center p-8">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <ShoppingBag className="w-24 h-24 mx-auto text-muted-foreground mb-6" />
+            <p className="text-xl mb-8">Your cart is empty.</p>
+            <Link href="/collections">
+              <Button className="w-full sm:w-auto">
+                Continue Shopping
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </Link>
+          </motion.div>
         </CardContent>
       </Card>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-center">Your Shopping Cart</h1>
-      <div className="grid md:grid-cols-3 gap-8">
-        <Card className="md:col-span-2">
+    <div className="container mx-auto px-4 py-12">
+      <motion.h1
+        className="text-4xl font-bold mb-8 text-center"
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        Your Shopping Cart
+      </motion.h1>
+      <div className="grid lg:grid-cols-3 gap-8">
+        <Card className="lg:col-span-2">
           <CardHeader>
             <CardTitle>Cart Items ({cartItems.length})</CardTitle>
           </CardHeader>
-          <CardContent>
-            <ScrollArea className="h-[calc(100vh-400px)]">
-              {cartItems.map((item) => (
-                <div key={item.productId} className="flex items-center space-x-4 py-4">
-                  <div className="relative w-24 h-24 rounded-md overflow-hidden">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <h2 className="text-lg font-semibold">{item.name}</h2>
-                    <p className="text-sm text-gray-500">Price: ${item.price.toFixed(2)}</p>
-                    <div className="flex items-center mt-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleUpdateQuantity(item.productId, item.quantity - 1)}
-                      >
-                        <Minus className="h-4 w-4" />
-                      </Button>
-                      <Input
-                        type="number"
-                        value={item.quantity}
-                        onChange={(e) => handleUpdateQuantity(item.productId, parseInt(e.target.value))}
-                        className="w-16 mx-2 text-center"
+          <CardContent className="p-0">
+            <ScrollArea className="h-[calc(100vh-400px)] p-4">
+              <AnimatePresence>
+                {cartItems.map((item) => (
+                  <motion.div
+                    key={item.productId}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.1 }}
+                    className="flex items-center space-x-4 py-6 border-b last:border-b-0"
+                  >
+                    <div className="relative w-24 h-24 rounded-lg overflow-hidden">
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        layout="fill"
+                        objectFit="cover"
                       />
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleUpdateQuantity(item.productId, item.quantity + 1)}
-                      >
-                        <Plus className="h-4 w-4" />
-                      </Button>
                     </div>
-                  </div>
-                  <Button variant="destructive" size="icon" onClick={() => handleRemove(item.productId)}>
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
+                    <div className="flex-1">
+                      <h2 className="text-lg font-semibold">{item.name}</h2>
+                      <p className="text-sm text-muted-foreground">Price: ${item.price.toFixed(2)}</p>
+                      <div className="flex items-center mt-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleUpdateQuantity(item.productId, item.quantity - 1)}
+                          className="rounded-full"
+                        >
+                          <Minus className="h-4 w-4" />
+                        </Button>
+                        <Input
+                          type="number"
+                          value={item.quantity}
+                          onChange={(e) => handleUpdateQuantity(item.productId, parseInt(e.target.value))}
+                          className="w-16 mx-2 text-center"
+                        />
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => handleUpdateQuantity(item.productId, item.quantity + 1)}
+                          className="rounded-full"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => handleRemove(item.productId)}
+                      className="rounded-full"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </ScrollArea>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="bg-muted/50">
             <Button onClick={clearCart} variant="outline" className="w-full">
               Clear Cart
             </Button>
           </CardFooter>
         </Card>
-        <Card>
+        <Card className="lg:sticky lg:top-8 h-fit">
           <CardHeader>
             <CardTitle>Order Summary</CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex justify-between font-bold">
-                <span>Total</span>
+          <CardContent className="p-6">
+            <motion.div
+              className="space-y-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
+            >
+              <div className="flex justify-between text-lg">
+                <span>Subtotal</span>
                 <span>${total.toFixed(2)}</span>
               </div>
-            </div>
+              <div className="flex justify-between text-lg">
+                <span>Shipping</span>
+                <span>Free</span>
+              </div>
+              <div className="border-t pt-4">
+                <div className="flex justify-between font-bold text-xl">
+                  <span>Total</span>
+                  <span>${total.toFixed(2)}</span>
+                </div>
+              </div>
+            </motion.div>
           </CardContent>
           <CardFooter>
             <Button className="w-full">
