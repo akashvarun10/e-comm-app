@@ -1,15 +1,26 @@
-// models/collectionModel.js
-const mongoose = require('mongoose');
+// // models/collectionModel.js
+// const mongoose = require('mongoose');
+
+// const collectionSchema = new mongoose.Schema({
+//   name: {
+//     type: String,
+//     required: true,
+//     unique: true,
+//   },
+//   description: {
+//     type: String,
+//   },
+// });
+
+// module.exports = mongoose.model('Collection', collectionSchema);
+
+const mongoose = require("mongoose");
 
 const collectionSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  description: {
-    type: String,
-  },
+  name: { type: String, required: true, unique: true },
+  description: { type: String },
+  colorStart: { type: String, default: "#0000ff" },
+  colorEnd: { type: String, default: "#ff00ff" },
 });
 
-module.exports = mongoose.model('Collection', collectionSchema);
+module.exports = mongoose.model("Collection", collectionSchema);
