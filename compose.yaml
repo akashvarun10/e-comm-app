@@ -1,0 +1,29 @@
+services:
+  node-backend:
+    build:
+      context: ./backend
+    container_name: node-backend
+    ports:
+      - "3001:3001"  # Expose Node.js backend on port 3001
+
+  ecommerce-admin:
+    build:
+      context: ./ecommerce-admin
+    container_name: ecommerce-admin
+    ports:
+      - "3002:3002"  # Expose admin Next.js app on port 3002
+
+  ecommerce-frontend:
+    build:
+      context: ./ecommerce-frontend
+    container_name: ecommerce-frontend
+    ports:
+      - "3000:3000"  # Expose frontend Next.js app on port 3000
+    depends_on:
+      - node-backend  # Ensure frontend starts after backend
+
+  # ecommerce-database:
+  #   image: mongo:latest
+  #   container_name: pymongodb
+  #   ports:
+  #     - "27017:27017"  # Expose MongoDB on port 27017
