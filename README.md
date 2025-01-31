@@ -1,4 +1,4 @@
-# E-commerce Backend API
+# E-commerce Platform 
 
 This project is a backend API for an e-commerce application, built with Node.js, Express, and MongoDB. It provides endpoints for user authentication, product management, and collection management.
 
